@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from "react-router-dom";
 import { GoogleLogout } from "react-google-login";
 
 const Dashboard = ({setLogin}) => {
@@ -70,13 +71,16 @@ const Dashboard = ({setLogin}) => {
         />
         <button onClick={handleSearch}>Search</button>
       </div>
-        {jobs.map((job, index) => (
+      {jobs.map((job, index) => (
+        <Link to={`/job/${job.id}`}>
           <div className="job_list" key={index}>
             <h4>{job.title}</h4>
             <p>{job.location}</p>
             <p>{job.type}</p>
           </div>
-        ))}
+        </Link>
+      ))}
+
       <GoogleLogout
         clientId={clientId}
         buttonText="Log out"
