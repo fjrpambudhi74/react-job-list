@@ -20,7 +20,23 @@ const Dashboard = ({setLogin}) => {
 
   const handleSearch = (event) => {
     event.preventDefault()
-    console.log(search)
+    fetchSearchJobs(search)
+    // console.log(search)
+  }
+
+  const fetchSearchJobs = async () => {
+    const { description, location, fullTime } = search;
+    console.log("fetch",search)
+    try {
+      const url =
+        `http://dev3.dansmultipro.co.id/api/recruitment/positions.json?description=${description}&location=${location}&full_time=${fullTime}`;
+
+      const response = await fetch(url)
+      const result = await response.json()
+      console.log(result)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const clientId =
