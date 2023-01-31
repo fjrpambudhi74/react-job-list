@@ -4,7 +4,7 @@ import JobItems from './JobItems';
 import Header from "./Header";
 
 
-const Dashboard = ({setLogin}) => {
+const Homepage = ({setLogin}) => {
   const [search, setSearch] = useState({
     description: '',
     location: '',
@@ -72,45 +72,57 @@ const Dashboard = ({setLogin}) => {
   };
   return (
     <>
-    <Header/>
+      <Header />
       <div className="job_search">
-        <input
-          type="text"
-          name="description"
-          placeholder="Description"
-          value={search.description}
-          onChange={handleInput}
-        />
-        <input
-          type="text"
-          name="location"
-          placeholder="Location"
-          value={search.location}
-          onChange={handleInput}
-        />
-        <input
-          type="checkbox"
-          name="fullTime"
-          checked={search.fullTime}
-          onChange={handleInput}
-        />
-        <button onClick={handleSearch}>Search</button>
+        <div>
+          <label for="description">Description</label>
+          <input
+            type="text"
+            name="description"
+            placeholder="Description"
+            value={search.description}
+            onChange={handleInput}
+          />
+        </div>
+        <div>
+          <label for="location">Location</label>
+          <input
+            type="text"
+            name="location"
+            placeholder="Location"
+            value={search.location}
+            onChange={handleInput}
+          />
+        </div>
+        <div>
+          <label for="Fulltime">Full Time Only</label>
+          <input
+            type="checkbox"
+            name="fullTime"
+            checked={search.fullTime}
+            onChange={handleInput}
+          />
+        </div>
+
+        <button className='job_search__button' onClick={handleSearch}>Search</button>
       </div>
-      <JobItems jobs={jobs}/>
+      <JobItems jobs={jobs} />
       {errorMsg && <p>{errorMsg}</p>}
       {hasMore && (
-        <button className="loading-more-btn" onClick={handleLoadMore}>
-          {isLoading ? "Loading..." : "Load More"}
+        <button className="job_btn_more" onClick={handleLoadMore}>
+          {isLoading ? "Loading..." : "More Jobs"}
         </button>
       )}
       <br />
+      <div className='job_logout'>
       <GoogleLogout
         clientId={clientId}
         buttonText="Log out"
         onLogoutSuccess={logOut}
       />
+      </div>
     </>
   );
 }
 
-export default Dashboard
+export default Homepage
