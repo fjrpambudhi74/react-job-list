@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { GoogleLogout } from "react-google-login";
 import JobItems from './JobItems';
+import Header from "./Header";
+
 
 const Dashboard = ({setLogin}) => {
   const [search, setSearch] = useState({
@@ -70,7 +72,7 @@ const Dashboard = ({setLogin}) => {
   };
   return (
     <>
-      <h1>Dashboard</h1>
+    <Header/>
       <div className="job_search">
         <input
           type="text"
