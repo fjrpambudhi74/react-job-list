@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script";
 
-const LoginPage = () => {
+const LoginPage = ({setLogin}) => {
   const clientId =
     '438375057615-86gf8du179pahebqq8jelnj06hcl1i4g.apps.googleusercontent.com';
   useEffect(() => {
@@ -17,9 +17,11 @@ const LoginPage = () => {
 
   const onSuccess = (res) => {
     console.log("success:", res);
+    setLogin(res.profileObj);
   };
   const onFailure = (err) => {
     console.log("failed:", err);
+    setLogin(null)
   };
 
   return (
