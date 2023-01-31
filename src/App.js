@@ -1,6 +1,6 @@
 import './App.css';
 import Login from './components/LoginPage'
-import Dashboard from "./components/Dashboard";
+import Homepage from "./components/Homepage";
 import { useState } from 'react';
 import { Route, Routes } from "react-router-dom";
 import JobDetails from "./components/JobDetails";
@@ -13,7 +13,7 @@ function App() {
     <div className="App">
       <Routes>
       {isLogin ? (
-        <Route exact path="/" element={<Dashboard setLogin={setLogin} />} />
+        <Route exact path="/" element={<Homepage setLogin={setLogin} />} />
       ) : (
         <Route exact path="/login" element={ <Login setLogin={setLogin} />} />
       )}

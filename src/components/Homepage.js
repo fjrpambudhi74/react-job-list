@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from "react-router-dom";
 import { GoogleLogout } from "react-google-login";
+import JobItems from './JobItems';
 
 const Dashboard = ({setLogin}) => {
   const [search, setSearch] = useState({
@@ -12,6 +12,7 @@ const Dashboard = ({setLogin}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false)
   const [hasMore, setHasMore] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('')
 
 
   const handleInput = (event) => {
@@ -41,9 +42,10 @@ const Dashboard = ({setLogin}) => {
       const res = result?.filter((el) => el !== null)
       setHasMore(res.length > 0);
       setJobs((prev) => [...prev, ...res]);
-      console.log(jobs)
+      setErrorMsg('')
     } catch (error) {
       console.log(error)
+      setErrorMsg('Something went wrong, please try again later')
     } finally {
       setIsLoading(false)
     }
@@ -51,13 +53,13 @@ const Dashboard = ({setLogin}) => {
 
   useEffect(() => {
     if(currentPage > 1) fetchSearchJobs();
+    //eslint-disable-next-line
   }, [currentPage])
 
 
   const handleLoadMore = () => {
      if (isLoading) return;
      setCurrentPage((prev) => prev + 1);
-    //  fetchSearchJobs()
   }
 
   const clientId =
@@ -92,15 +94,8 @@ const Dashboard = ({setLogin}) => {
         />
         <button onClick={handleSearch}>Search</button>
       </div>
-      {jobs.map((job, index) => (
-        <Link to={`/job/${job.id}`}>
-          <div className="job_list" key={index}>
-            <h4>{job.title}</h4>
-            <p>{job.location}</p>
-            <p>{job.type}</p>
-          </div>
-        </Link>
-      ))}
+      <JobItems jobs={jobs}/>
+      {errorMsg && <p>{errorMsg}</p>}
       {hasMore && (
         <button className="loading-more-btn" onClick={handleLoadMore}>
           {isLoading ? "Loading..." : "Load More"}
