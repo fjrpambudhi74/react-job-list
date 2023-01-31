@@ -1,9 +1,15 @@
-import React from 'react'
+import React from "react";
+import { useLocation } from "react-router-dom";
 
 const JobDetails = () => {
+  const { state } = useLocation();
+  console.log(state);
   return (
-    <div>JobDetails</div>
-  )
-}
+    <>
+      <p>{state.type}</p>
+      <h2>{state.title}</h2>
+    </>
+  );
+};
 
-export default JobDetails
+export default JobDetails;
