@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 import { GoogleLogout } from "react-google-login";
 
 const Dashboard = ({setLogin}) => {
-
   const [search, setSearch] = useState({
     description: '',
     location: '',
     fullTime: false
   })
+  const [jobs, setJobs] = useState([])
 
   const handleInput = (event) => {
     const {name, value} = event.target
@@ -21,19 +21,18 @@ const Dashboard = ({setLogin}) => {
   const handleSearch = (event) => {
     event.preventDefault()
     fetchSearchJobs(search)
-    // console.log(search)
   }
 
   const fetchSearchJobs = async () => {
     const { description, location, fullTime } = search;
-    console.log("fetch",search)
     try {
       const url =
         `http://dev3.dansmultipro.co.id/api/recruitment/positions.json?description=${description}&location=${location}&full_time=${fullTime}`;
 
       const response = await fetch(url)
       const result = await response.json()
-      console.log(result)
+      if(result) setJobs(result)
+      console.log(jobs)
     } catch (error) {
       console.log(error)
     }
@@ -48,27 +47,36 @@ const Dashboard = ({setLogin}) => {
   return (
     <>
       <h1>Dashboard</h1>
-      <input
-        type="text"
-        name="description"
-        placeholder="Description"
-        value={search.description}
-        onChange={handleInput}
-      />
-      <input
-        type="text"
-        name="location"
-        placeholder="Location"
-        value={search.location}
-        onChange={handleInput}
-      />
-      <input
-        type="checkbox"
-        name="fullTime"
-        checked={search.fullTime}
-        onChange={handleInput}
-      />
-      <button onClick={handleSearch}>Search</button>
+      <div className="job_search">
+        <input
+          type="text"
+          name="description"
+          placeholder="Description"
+          value={search.description}
+          onChange={handleInput}
+        />
+        <input
+          type="text"
+          name="location"
+          placeholder="Location"
+          value={search.location}
+          onChange={handleInput}
+        />
+        <input
+          type="checkbox"
+          name="fullTime"
+          checked={search.fullTime}
+          onChange={handleInput}
+        />
+        <button onClick={handleSearch}>Search</button>
+      </div>
+        {jobs.map((job, index) => (
+          <div className="job_list" key={index}>
+            <h4>{job.title}</h4>
+            <p>{job.location}</p>
+            <p>{job.type}</p>
+          </div>
+        ))}
       <GoogleLogout
         clientId={clientId}
         buttonText="Log out"
