@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from "react-router-dom";
 import { GoogleLogout } from "react-google-login";
 
@@ -9,6 +9,10 @@ const Dashboard = ({setLogin}) => {
     fullTime: false
   })
   const [jobs, setJobs] = useState([])
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false)
+  const [hasMore, setHasMore] = useState(false);
+
 
   const handleInput = (event) => {
     const {name, value} = event.target
@@ -21,22 +25,39 @@ const Dashboard = ({setLogin}) => {
 
   const handleSearch = (event) => {
     event.preventDefault()
-    fetchSearchJobs(search)
+    fetchSearchJobs()
   }
 
   const fetchSearchJobs = async () => {
     const { description, location, fullTime } = search;
+    console.log(currentPage);
     try {
+      setIsLoading(true)
       const url =
-        `http://dev3.dansmultipro.co.id/api/recruitment/positions.json?description=${description}&location=${location}&full_time=${fullTime}`;
+        `http://dev3.dansmultipro.co.id/api/recruitment/positions.json?page=${currentPage}&description=${description}&location=${location}&full_time=${fullTime}`;
 
       const response = await fetch(url)
       const result = await response.json()
-      if(result) setJobs(result)
+      const res = result?.filter((el) => el !== null)
+      setHasMore(res.length > 0);
+      setJobs((prev) => [...prev, ...res]);
       console.log(jobs)
     } catch (error) {
       console.log(error)
+    } finally {
+      setIsLoading(false)
     }
+  }
+
+  useEffect(() => {
+    if(currentPage > 1) fetchSearchJobs();
+  }, [currentPage])
+
+
+  const handleLoadMore = () => {
+     if (isLoading) return;
+     setCurrentPage((prev) => prev + 1);
+    //  fetchSearchJobs()
   }
 
   const clientId =
@@ -80,7 +101,12 @@ const Dashboard = ({setLogin}) => {
           </div>
         </Link>
       ))}
-
+      {hasMore && (
+        <button className="loading-more-btn" onClick={handleLoadMore}>
+          {isLoading ? "Loading..." : "Load More"}
+        </button>
+      )}
+      <br />
       <GoogleLogout
         clientId={clientId}
         buttonText="Log out"
